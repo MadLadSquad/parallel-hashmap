@@ -34,6 +34,12 @@ This repository aims to provide a set of excellent **hash map** implementations,
 @byronhe kindly provided this [Chinese translation](https://byronhe.com/post/2020/11/10/parallel-hashmap-btree-fast-multi-thread-intro/) of the README.md.
 
 
+## Parallel-hashmap or GTL?
+
+The observant among us may have noticed that I have two github repos, [parallel-hashmap](https://github.com/greg7mdp/parallel-hashmap) and [gtl](https://github.com/greg7mdp/gtl), which both provide very similar functionality. Indeed the hash tables in both are equivalent and the code mostly the same. The main difference is that  [parallel-hashmap](https://github.com/greg7mdp/parallel-hashmap) only requires a C++11 compiler, while  [gtl](https://github.com/greg7mdp/gtl) requires a C++20 compiler.
+
+My recommendation would be to use [gtl](https://github.com/greg7mdp/gtl) if you are compiling with C++20 or higher, and  [parallel-hashmap](https://github.com/greg7mdp/parallel-hashmap) otherwise. While the included hash maps are equivalent, [gtl](https://github.com/greg7mdp/gtl) is where new development occurs, and it will include useful new classes.
+
 ## Fast *and*  memory friendly
 
 Click here [For a full writeup explaining the design and benefits of the Parallel Hashmap](https://greg7mdp.github.io/parallel-hashmap/).
@@ -147,7 +153,7 @@ When an ordering is not needed, a hash container is typically a better choice th
 
 - The Abseil hash tables internally randomize a hash seed, so that the table iteration order is non-deterministic. This can be useful to prevent *Denial Of Service*  attacks when a hash table is used for a customer facing web service, but it can make debugging more difficult. The *phmap* hashmaps by default do **not** implement this randomization, but it can be enabled by adding `#define PHMAP_NON_DETERMINISTIC 1` before including the header `phmap.h` (as is done in raw_hash_set_test.cc).
 
-- Unlike the Abseil hash maps, we do an internal mixing of the hash value provided. This prevents serious degradation of the hash table performance when the hash function provided by the user has poor entropy distribution. The cost in performance is very minimal, and this helps provide reliable performance even with *imperfect* hash functions.
+- Unlike the Abseil hash maps, we do an internal mixing of the hash value provided. This prevents serious degradation of the hash table performance when the hash function provided by the user has poor entropy distribution. The cost in performance is very minimal, and this helps provide reliable performance even with *imperfect* hash functions. Disabling this mixing is possible by defining the preprocessor macro `PHMAP_DISABLE_MIX=1` before `phmap.h` is included, but it is not recommended.
 
 
 ## Memory usage
